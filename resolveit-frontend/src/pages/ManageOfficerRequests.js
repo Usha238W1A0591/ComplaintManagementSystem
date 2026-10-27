@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useUIState } from '../hooks/useUIState';
 import UIStateMessage from '../components/UIStateMessage';
 
@@ -30,10 +30,7 @@ function ManageOfficerRequests() {
 
     const fetchPendingRequests = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/officer-requests/pending', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get('/api/officer-requests/pending');
             
             // Backend returns { status, requests } - extract the requests array
             const requestsData = response.data.requests || response.data;
@@ -62,11 +59,9 @@ function ManageOfficerRequests() {
         setActionState(requestId, 'loading', 'Approving request...');
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.put(
-                `http://localhost:8080/api/officer-requests/${requestId}/approve`,
-                { comment: reviewComment },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.put(
+                `/api/officer-requests/${requestId}/approve`,
+                { comment: reviewComment }
             );
             
             setActionState(requestId, 'success', 'Officer request approved successfully! User has been granted officer role.');
@@ -95,11 +90,9 @@ function ManageOfficerRequests() {
         setActionState(requestId, 'loading', 'Rejecting request...');
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.put(
-                `http://localhost:8080/api/officer-requests/${requestId}/reject`,
-                { comment: reviewComment },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.put(
+                `/api/officer-requests/${requestId}/reject`,
+                { comment: reviewComment }
             );
             
             setActionState(requestId, 'success', 'Officer request rejected. User has been notified.');

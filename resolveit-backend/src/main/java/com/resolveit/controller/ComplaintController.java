@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/complaints")
@@ -334,12 +335,13 @@ public class ComplaintController {
         try {
             List<ComplaintFile> files = complaintFileRepository.findByComplaint_Id(id);
             
+            String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
             List<Map<String, Object>> fileList = files.stream().map(file -> {
                 Map<String, Object> fileInfo = new HashMap<>();
                 fileInfo.put("id", file.getId());
                 fileInfo.put("fileName", file.getFileName());
-                fileInfo.put("downloadUrl", "http://localhost:8080/complaints/files/" + file.getId() + "/download");
-                fileInfo.put("viewUrl", "http://localhost:8080/complaints/files/" + file.getId() + "/view");
+                fileInfo.put("downloadUrl", baseUrl + "/complaints/files/" + file.getId() + "/download");
+                fileInfo.put("viewUrl", baseUrl + "/complaints/files/" + file.getId() + "/view");
                 return fileInfo;
             }).collect(Collectors.toList());
             

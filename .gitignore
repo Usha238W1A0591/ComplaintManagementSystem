@@ -108,7 +108,8 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Note: 'public' is intentionally NOT ignored - Create React App's public/
+# folder (containing index.html) MUST be committed for the build to work.
 
 # Storybook build outputs
 .out
@@ -191,3 +192,6 @@ spring.log
 # Sensitive configuration (create application-local.properties for local config)
 application-local.properties
 application-prod.properties
+
+# Nested duplicate project folder (do not commit)
+/ComplaintManagementSystem/

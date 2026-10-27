@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useUIState } from '../hooks/useUIState';
 import UIStateMessage from '../components/UIStateMessage';
 
@@ -16,10 +16,7 @@ function RequestOfficerRole() {
 
     const fetchMyRequests = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/officer-requests/my-requests', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get('/api/officer-requests/my-requests');
             
             // Backend returns { status, requests } - extract the requests array
             const requestsData = response.data.requests || response.data;
@@ -47,12 +44,7 @@ function RequestOfficerRole() {
         uiState.setLoading();
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.post(
-                'http://localhost:8080/api/officer-requests',
-                { reason },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await api.post('/api/officer-requests', { reason });
 
             uiState.setSuccess('Officer role request submitted successfully! You will be notified via email once reviewed.');
             setReason('');

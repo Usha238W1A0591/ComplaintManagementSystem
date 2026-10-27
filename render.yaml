@@ -1,0 +1,63 @@
+# Render Blueprint for the ResolveIt Spring Boot backend.
+#
+# Deploy via the Render Dashboard: New > Blueprint > select this repository.
+# Values marked `sync: false` are entered in the Render dashboard and are NOT
+# stored in Git (secrets + per-environment URLs).
+
+databases:
+  - name: resolveit-db
+    databaseName: resolveit
+    plan: free
+
+services:
+  - type: web
+    name: resolveit-backend
+    env: docker
+    rootDir: resolveit-backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    autoDeployTrigger: commit
+    healthCheckPath: /health
+    envVars:
+      # Database wiring: discrete properties composed into a jdbc:postgresql://
+      # URL at runtime by entrypoint.sh.
+      - key: DB_HOST
+        fromDatabase:
+          name: resolveit-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: resolveit-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: resolveit-db
+          property: database
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: resolveit-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: resolveit-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_JPA_SHOW_SQL
+        value: "false"
+      # Secrets / per-environment values: set in the Render dashboard.
+      - key: JWT_SECRET
+        sync: false
+      - key: APP_CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: APP_BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: APP_BOOTSTRAP_ADMIN_PASSWORD
+        sync: false
+      - key: SPRING_MAIL_USERNAME
+        sync: false
+      - key: SPRING_MAIL_PASSWORD
+        sync: false
+      - key: APP_FRONTEND_URL
+        sync: false
