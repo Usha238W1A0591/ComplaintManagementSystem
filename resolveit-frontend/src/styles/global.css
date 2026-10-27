@@ -116,19 +116,24 @@ body {
 .modern-input {
   width: 100%;
   padding: 16px 20px;
-  border: 2px solid #e1e8ed;
+  border: 2px solid #d1d5db;
   border-radius: 12px;
   font-size: 16px;
   font-family: 'Inter', sans-serif;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffff;
+  color: #111827;
+}
+
+.modern-input::placeholder {
+  color: #9ca3af;
 }
 
 .modern-input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+  background: #ffffff;
 }
 
 /* Alert styles */
